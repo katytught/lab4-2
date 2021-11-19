@@ -10,6 +10,7 @@ public class Visitor extends calcBaseVisitor<Void>{
     public boolean flagif=true;
     public boolean isconst=false;
     public int T=0;
+    public int Tmid=0;
     static Integer getnumber(String s){
         int res = 0;
         s = s.toLowerCase(Locale.ROOT);
@@ -85,7 +86,7 @@ public class Visitor extends calcBaseVisitor<Void>{
             visit(ctx.block());
         }
         else if(ctx.getText().startsWith("if")){
-            int Tleft=0,Tright=0,Tmid=0;
+            int Tleft=0,Tright=0;
             if(ctx.stmt().size()>1){
                 Tleft=++T;
                 Tright=++T;
@@ -131,6 +132,9 @@ public class Visitor extends calcBaseVisitor<Void>{
                 visit(ctx.stmt(1));
                 if(!results.endsWith("br label %t"+Tmid+"\n"));{
                     results+="br label %t"+Tmid+"\n";
+                    if(thi){
+                        Num++;
+                    }
                 }
             }
             if(thi){
