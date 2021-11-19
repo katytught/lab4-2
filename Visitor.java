@@ -124,7 +124,7 @@ public class Visitor extends calcBaseVisitor<Void>{
             }
             results+="t"+Tleft+":\n";
             visit(ctx.stmt(0));
-            results+="br %t"+Tmid+":\n";
+            results+="br label %t"+Tmid+"\n";
 //            if(!results.endsWith(":\n")&&!results.endsWith("br label %b"+rank+"\n")){
 //                results+="br label %b"+rank+"\n";
 //            }
@@ -136,7 +136,7 @@ public class Visitor extends calcBaseVisitor<Void>{
 //                }
                 results+="t"+Tright+":\n";
                 visit(ctx.stmt(1));
-                results+="br %t"+Tmid+":\n";
+                results+="br label %t"+Tmid+"\n";
 //                if(!results.endsWith(":\n")&&!results.endsWith("br label %b"+rank+"\n")){
 //                    results+="br label %b"+rank+"\n";
 //                }
