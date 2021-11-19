@@ -86,62 +86,84 @@ public class Visitor extends calcBaseVisitor<Void>{
             visit(ctx.block());
         }
         else if(ctx.getText().startsWith("if")){
-            int Tleft=0,Tright=0;
-            if(ctx.stmt().size()>1){
-                Tleft=++T;
-                Tright=++T;
-                if(flagif){
-                    Tmid=++T;
-                }
-            }
-            else {
-                Tleft=++T;
-                Tright=++T;
-                if(flagif){
-                    Tmid=T;
-                }
-            }
-            boolean thi=false;
-            if(flagif==true){
-                thi=true;
-                flagif=false;
-            }
-            visit(ctx.cond());
-            if(Reglist.getInstance().getreg("%"+(Num-1)).getType().equals("i32")){
-                results+="%"+Num+" = icmp ne "+Reglist.getInstance().getreg("%"+(Num-1)).getType() +" %" + (Num-1) + ", 0"+ "\n";
-                Register reg = new Register();
-                reg.setName("%"+Num);
-                reg.setNum(Num);
-                reg.setType("i1");
-                Reglist.getInstance().add(reg);
-                Num++;
-            }
             if(ctx.stmt().size()==2){
+                int Tleft=++T;
+                int Tright=++T;
+                int Tmid=++T;
+                visit(ctx.cond());
                 results+="br i1 %"+(Num-1)+", label %t"+Tleft+", label %t"+Tright+"\n";
-            }
-            else {
-                results+="br i1 %"+(Num-1)+", label %t"+Tleft+", label %t"+Tmid+"\n";
-            }
-            results+="t"+Tleft+":\n";
-            visit(ctx.stmt(0));
-            if(!results.endsWith("br label %t"+Tmid+"\n"));{
+                results+="t"+Tleft+":\n";
+                visit(ctx.stmt(0));
                 results+="br label %t"+Tmid+"\n";
-            }
-            if(ctx.stmt().size()>=2){
                 results+="t"+Tright+":\n";
                 visit(ctx.stmt(1));
-                if(!results.endsWith("br label %t"+Tmid+"\n"));{
-                    results+="br label %t"+Tmid+"\n";
-                    if(thi){
-                        Num++;
-                    }
-                }
-            }
-            if(thi){
-//                results+="br label %t"+Tmid+"\n";
+                results+="br label %t"+Tmid+"\n";
                 results+="t"+Tmid+":\n";
-                flagif=true;
             }
+            else if(ctx.stmt().size()==1){
+                int Tleft=++T;
+                int Tright=++T;
+                int Tmid=T;
+                visit(ctx.cond());
+                results+="br i1 %"+(Num-1)+", label %t"+Tleft+", label %t"+Tmid+"\n";
+                results+="t"+Tleft+":\n";
+                visit(ctx.stmt(0));
+                results+="br label %t"+Tmid+"\n";
+                results+="t"+Tmid+":\n";
+            }
+//            int Tleft=0,Tright=0;
+//            if(ctx.stmt().size()>1){
+//                Tleft=++T;
+//                Tright=++T;
+//                if(flagif){
+//                    Tmid=++T;
+//                }
+//            }
+//            else {
+//                Tleft=++T;
+//                Tright=++T;
+//                if(flagif){
+//                    Tmid=T;
+//                }
+//            }
+//            boolean thi=false;
+//            if(flagif==true){
+//                thi=true;
+//                flagif=false;
+//            }
+//            visit(ctx.cond());
+//            if(Reglist.getInstance().getreg("%"+(Num-1)).getType().equals("i32")){
+//                results+="%"+Num+" = icmp ne "+Reglist.getInstance().getreg("%"+(Num-1)).getType() +" %" + (Num-1) + ", 0"+ "\n";
+//                Register reg = new Register();
+//                reg.setName("%"+Num);
+//                reg.setNum(Num);
+//                reg.setType("i1");
+//                Reglist.getInstance().add(reg);
+//                Num++;
+//            }
+//            if(ctx.stmt().size()==2){
+//                results+="br i1 %"+(Num-1)+", label %t"+Tleft+", label %t"+Tright+"\n";
+//            }
+//            else {
+//                results+="br i1 %"+(Num-1)+", label %t"+Tleft+", label %t"+Tmid+"\n";
+//            }
+//            results+="t"+Tleft+":\n";
+//            visit(ctx.stmt(0));
+//            if(!results.endsWith("br label %t"+Tmid+"\n"));{
+//                results+="br label %t"+Tmid+"\n";
+//            }
+//            if(ctx.stmt().size()>=2){
+//                results+="t"+Tright+":\n";
+//                visit(ctx.stmt(1));
+//                if(!results.endsWith("br label %t"+Tmid+"\n"));{
+//                    results+="br label %t"+Tmid+"\n";
+//                }
+//            }
+//            if(thi){
+////                results+="br label %t"+Tmid+"\n";
+//                results+="t"+Tmid+":\n";
+//                flagif=true;
+//            }
         }
         else if(ctx.getText().startsWith("return")){
             String s=visitExp(ctx.exp());
