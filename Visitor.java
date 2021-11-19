@@ -9,9 +9,7 @@ public class Visitor extends calcBaseVisitor<Void>{
 //    public int t=1;
     public boolean flagif=true;
     public boolean isconst=false;
-    public int Tleft=0;
-    public int Tright=0;
-    public int Tmid=0;
+    public int T=0;
     static Integer getnumber(String s){
         int res = 0;
         s = s.toLowerCase(Locale.ROOT);
@@ -87,18 +85,19 @@ public class Visitor extends calcBaseVisitor<Void>{
             visit(ctx.block());
         }
         else if(ctx.getText().startsWith("if")){
+            int Tleft=0,Tright=0,Tmid=0;
             if(ctx.stmt().size()>1){
-                Tleft=Tmid+1;
-                Tright=Tmid+2;
+                Tleft=++T;
+                Tright=++T;
                 if(flagif){
-                    Tmid+=3;
+                    Tmid=++T;
                 }
             }
             else {
-                Tleft=Tmid+1;
-                Tright=Tmid+2;
+                Tleft=++T;
+                Tright=++T;
                 if(flagif){
-                    Tmid+=2;
+                    Tmid=T;
                 }
             }
             boolean thi=false;
@@ -130,12 +129,12 @@ public class Visitor extends calcBaseVisitor<Void>{
             if(ctx.stmt().size()>=2){
                 results+="t"+Tright+":\n";
                 visit(ctx.stmt(1));
-//                if(!results.endsWith("br label %t2\n"));{
-//                    results+="br label %t"+Tmid+"\n";
-//                }
+                if(!results.endsWith("br label %t"+Tmid+"\n"));{
+                    results+="br label %t"+Tmid+"\n";
+                }
             }
             if(thi){
-                results+="br label %t"+Tmid+"\n";
+//                results+="br label %t"+Tmid+"\n";
                 results+="t"+Tmid+":\n";
                 flagif=true;
             }
