@@ -91,6 +91,15 @@ public class Visitor extends calcBaseVisitor<Void>{
                 int Tright=++T;
                 int Tmid=++T;
                 visit(ctx.cond());
+                if(Reglist.getInstance().getreg("%"+(Num-1)).getType().equals("i32")){
+                results+="%"+Num+" = icmp ne "+Reglist.getInstance().getreg("%"+(Num-1)).getType() +" %" + (Num-1) + ", 0"+ "\n";
+                Register reg = new Register();
+                reg.setName("%"+Num);
+                reg.setNum(Num);
+                reg.setType("i1");
+                Reglist.getInstance().add(reg);
+                Num++;
+                }
                 results+="br i1 %"+(Num-1)+", label %t"+Tleft+", label %t"+Tright+"\n";
                 results+="t"+Tleft+":\n";
                 visit(ctx.stmt(0));
@@ -105,6 +114,15 @@ public class Visitor extends calcBaseVisitor<Void>{
                 int Tright=++T;
                 int Tmid=T;
                 visit(ctx.cond());
+                if(Reglist.getInstance().getreg("%"+(Num-1)).getType().equals("i32")){
+                    results+="%"+Num+" = icmp ne "+Reglist.getInstance().getreg("%"+(Num-1)).getType() +" %" + (Num-1) + ", 0"+ "\n";
+                    Register reg = new Register();
+                    reg.setName("%"+Num);
+                    reg.setNum(Num);
+                    reg.setType("i1");
+                    Reglist.getInstance().add(reg);
+                    Num++;
+                }
                 results+="br i1 %"+(Num-1)+", label %t"+Tleft+", label %t"+Tmid+"\n";
                 results+="t"+Tleft+":\n";
                 visit(ctx.stmt(0));
