@@ -124,38 +124,23 @@ public class Visitor extends calcBaseVisitor<Void>{
             }
             results+="t"+Tleft+":\n";
             visit(ctx.stmt(0));
-            results+="br label %t"+Tmid+"\n";
-//            if(!results.endsWith(":\n")&&!results.endsWith("br label %b"+rank+"\n")){
-//                results+="br label %b"+rank+"\n";
-//            }
+            if(!results.endsWith("br label %t"+Tmid+"\n"));{
+                results+="br label %t"+Tmid+"\n";
+            }
             if(ctx.stmt().size()>=2){
-//                results+="b"+t+":\n";
-//                t++;
-//                if(t==rank){
-//                    t++;
-//                }
                 results+="t"+Tright+":\n";
                 visit(ctx.stmt(1));
-                results+="br label %t"+Tmid+"\n";
-//                if(!results.endsWith(":\n")&&!results.endsWith("br label %b"+rank+"\n")){
-//                    results+="br label %b"+rank+"\n";
+//                if(!results.endsWith("br label %t2\n"));{
+//                    results+="br label %t"+Tmid+"\n";
 //                }
             }
             if(thi){
+                results+="br label %t"+Tmid+"\n";
                 results+="t"+Tmid+":\n";
                 flagif=true;
             }
-//            if(!results.endsWith(":\n")&& thi){
-//                results += "b"+rank+":\n";
-//                rank=1;
-//                bnum++;
-//                flagif=true;
-//            }
-
-//            results+="b"+rank+":\n";
         }
         else if(ctx.getText().startsWith("return")){
-
             String s=visitExp(ctx.exp());
             results+="ret i32 "+s+"\n";
             Num++;
